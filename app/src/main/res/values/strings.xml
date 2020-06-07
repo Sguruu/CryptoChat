@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Skillbox CryptoChat</string>
+    <string name="BottonSend">Отправить</string>
+    <string name="Enter_message">Введите ваше сообщение</string>
+</resources>
