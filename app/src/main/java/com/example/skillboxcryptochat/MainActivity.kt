@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         recyclerInit()
         connectServer()
         getUserName()
+        welcomeMessage()
 
         sendButton.setOnClickListener(View.OnClickListener {
             dataMessageListAdd(userInput.text.toString(), myUserName, myMessage = true)
@@ -43,8 +44,6 @@ class MainActivity : AppCompatActivity() {
             server.sendMessage(userInput.text.toString())
             //очистка поля
             userInput.setText("")
-            //  recyclerInit()
-
             //для тестирования
             imitationMessage()
         })
@@ -66,8 +65,6 @@ class MainActivity : AppCompatActivity() {
         //  layoutManager.reverseLayout =true
         //  layoutManager.stackFromEnd = true
         chatWindow.layoutManager = layoutManager
-
-
         // layoutManagerGird.reverseLayout = true
         //  layoutManagerGird.fr
         chatWindow.adapter = messageController
@@ -108,9 +105,7 @@ class MainActivity : AppCompatActivity() {
             //отослать на сервер
             server.sendUserName(myUserName)
         }).show()
-        // recyclerInit()
     }
-
 
     private fun dateText(): String {
         //работа с датой
@@ -135,7 +130,6 @@ class MainActivity : AppCompatActivity() {
     //имитация чужих сообщений
     private fun imitationMessage() {
         taimer()
-
     }
 
     private fun taimer() {
@@ -144,10 +138,7 @@ class MainActivity : AppCompatActivity() {
             //действия каждый интервал
             override fun onTick(millisUntilFinished: Long) {
                 println("проверка таймер")
-
-
             }
-
             //действия по заверению интервала
             override fun onFinish() {
                 messageController.setMessage(false)
@@ -155,6 +146,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
         timer.start()
+    }
+
+    // первое приведственное сообщение (входящие)
+    private fun welcomeMessage() {
+        val message = "Инфа по программе:\n" +
+                "Привет ! Ты находишься в зашифрованном чате. Все сообщения отправленные тобой 1. сначала хэшируются по алгоритму \"SHA-256\"\n" +
+                "2. Шифруются по алгортиму \"AES\"\n" +
+                "Сообщение которые ты видешь также дишефруются с участием секретного ключа, который состоит из секретного слова !\n" +
+                "3.Использованы следующие технологии/библиотеки : 1.okhttp3, 2.gson, 3.работа с потоками 4.сетевой протокол типа websocket"
+        dataMessageListAdd(message, "Бот", false)
     }
 }
 
