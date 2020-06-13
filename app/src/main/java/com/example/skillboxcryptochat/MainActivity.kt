@@ -13,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.skillboxcryptochat.model.DataMessage
-import com.example.skillboxcryptochat.model.User
-import com.example.skillboxcryptochat.model.UserStatus
 import com.example.skillboxcryptochat.recycler.MessageController
 import java.text.SimpleDateFormat
 import java.util.*
