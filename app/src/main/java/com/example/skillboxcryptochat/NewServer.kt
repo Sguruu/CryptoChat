@@ -22,15 +22,18 @@ class NewServer(
 
     //создали запрос
     val request = Request.Builder()
-        .url("ws://35.214.3.133:8881")
+        .url("ws://138.197.189.159:8881")
         .build()
+    //отключение симулятора сообщений
+    //true - включить false - отключить
+    var turnOffSimulation: Boolean = true
 
 
     //создаем сокет
     val webSocket = client.newWebSocket(request, object : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             println("подсоединение к серверу успешно !" + response)
-            //val myName: String = "3{\"name\":\"Морти\"}"
+           turnOffSimulation = false
 
 
         }
@@ -39,6 +42,7 @@ class NewServer(
             super.onFailure(webSocket, t, response)
             println("Хз что это наверно ошибка" + response)
             println(t.localizedMessage)
+           turnOffSimulation = true
 
         }
 

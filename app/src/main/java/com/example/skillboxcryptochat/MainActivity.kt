@@ -129,7 +129,17 @@ class MainActivity : AppCompatActivity() {
 
     //имитация чужих сообщений
     private fun imitationMessage() {
-        taimer()
+        var imitationMessage = true
+        runOnUiThread({
+            imitationMessage = server.turnOffSimulation
+        })
+        if (!imitationMessage) {
+            println("MainActivity  private fun imitationMessage() : имитация отключена ")
+        } else {
+            println("MainActivity  private fun imitationMessage() : имитация включена ")
+            taimer()
+        }
+
     }
 
     private fun taimer() {
@@ -139,10 +149,11 @@ class MainActivity : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 println("проверка таймер")
             }
+
             //действия по заверению интервала
             override fun onFinish() {
                 messageController.setMessage(false)
-                dataMessageListAdd("Сообщение ответ", "Тяпа", myMessage = false)
+                dataMessageListAdd("Если вы видите это сообщение, значит сервер не доступен !", "Тяпа", myMessage = false)
             }
         }
         timer.start()
@@ -158,4 +169,6 @@ class MainActivity : AppCompatActivity() {
         dataMessageListAdd(message, "Бот", false)
     }
 }
+
+
 
