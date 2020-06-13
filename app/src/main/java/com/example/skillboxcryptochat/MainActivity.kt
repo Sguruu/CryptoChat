@@ -172,6 +172,7 @@ class MainActivity : AppCompatActivity() {
             3. Использованы следующие технологии/библиотеки : 
             1.okhttp3, 2.gson, 3.работа с потоками, 4.сетевой протокол типа websocket
             4. Адрес сервера : ${server.URL}
+            5. Секретное слово: ${Crypto.pass}
         """.trimIndent()
         dataMessageListAdd(message, "Бот", false)
     }

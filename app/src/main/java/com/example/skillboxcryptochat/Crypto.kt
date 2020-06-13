@@ -14,7 +14,8 @@ object Crypto {
     //секретный ключ
     private var keySpec: SecretKeySpec
     //секретное слово
-    private var pass = "ме"
+    var pass = "медвежьяпипирочка"
+    private set
 
     init {
 
@@ -34,8 +35,6 @@ object Crypto {
         //создаем из хэша спеификацию ключа
         //передаем ключ и указываем тип алгоритма шифрования
         keySpec = SecretKeySpec(hash, "AES")
-
-
     }
 
 
@@ -55,12 +54,14 @@ object Crypto {
 
         //приводим к строки получифшийся масств байт
         return Base64.getEncoder().encodeToString(encrypted)
+
+
     }
 
     //функция декодирования
     fun decrypt(decryptedText: String): String {
         val ciphered: ByteArray =
-            Base64.getDecoder().decode(decryptedText).toString().toByteArray()
+            Base64.getDecoder().decode(decryptedText)
         val cipher: Cipher = Cipher.getInstance("AES")
         cipher.init(Cipher.DECRYPT_MODE, keySpec)
         val rawText: ByteArray = cipher.doFinal(ciphered)
