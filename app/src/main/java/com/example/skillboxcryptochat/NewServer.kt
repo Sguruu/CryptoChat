@@ -11,30 +11,34 @@ import java.util.function.Consumer
 
 class NewServer(
     //для передачи между активити
-    private var onMessagwReceive: Consumer<Pair<String, String>>
+    private var onMessagwReceive: Consumer<Pair<String, String>>,
+    private var connectUser: Consumer<Triple<Boolean, String,Int>>
 ) {
     val URL = "ws://138.197.189.159:8881"
+
     //для хранения пользователя и его переменно
     val names = mutableMapOf<Long, String>()
     // private lateinit var  onMessagwReceive : Consumer <Pair<String,String>>
 
     //создаем клиент
-    val client = OkHttpClient.Builder().build()
+    private val client = OkHttpClient.Builder().build()
 
     //создали запрос
-    val request = Request.Builder()
+   private val request = Request.Builder()
         .url(URL)
         .build()
+
     //отключение симулятора сообщений
     //true - включить false - отключить
     var turnOffSimulation: Boolean = true
+        private set
 
 
     //создаем сокет
     val webSocket = client.newWebSocket(request, object : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             println("подсоединение к серверу успешно !" + response)
-           turnOffSimulation = false
+            turnOffSimulation = false
 
 
         }
@@ -43,7 +47,7 @@ class NewServer(
             super.onFailure(webSocket, t, response)
             println("Хз что это наверно ошибка" + response)
             println(t.localizedMessage)
-           turnOffSimulation = true
+            turnOffSimulation = true
 
         }
 
@@ -61,12 +65,14 @@ class NewServer(
             if (type == NewProtocol().USER_STATUS) {
                 //обработать факт подключения или отключения пользователя
                 userStatusChanged(text)
+
             }
             if (type == NewProtocol().MESSAGE) {
                 //показать сообщения на экране
                 displayIncomingMessage(text)
 
             }
+
         }
 
         override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
@@ -115,9 +121,16 @@ class NewServer(
         //если пользователь подключился
         if (s.connected) {
             names.put(s.user.id, s.user.name)
+            //для передачи в Activity
+            connectUser.accept(Triple(true, s.user.name,names.size))
+            println("Пользователей онлайн ${names.size}")
         } else //если пользователь отключился
-        //удаляем по id
+        {
+            //удаляем по id
             names.remove(s.user.id)
+            connectUser.accept(Triple(false, s.user.name,names.size))
+            println("Пользователей онлайн ${names.size}")
+        }
     }
 
     //отправка сообщений

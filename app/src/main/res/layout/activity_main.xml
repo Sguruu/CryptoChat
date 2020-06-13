@@ -40,5 +40,6 @@
             android:layout_weight="1"
             android:background="@drawable/pink_background"
             android:text="@string/BottonSend" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

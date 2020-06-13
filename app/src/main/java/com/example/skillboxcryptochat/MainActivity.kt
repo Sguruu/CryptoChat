@@ -6,20 +6,28 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.skillboxcryptochat.model.DataMessage
+import com.example.skillboxcryptochat.model.User
+import com.example.skillboxcryptochat.model.UserStatus
 import com.example.skillboxcryptochat.recycler.MessageController
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.function.Consumer
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var sendButton: Button
     private lateinit var userInput: EditText
     private lateinit var chatWindow: RecyclerView
+
+    //статус бар
+    private lateinit var actionBar: ActionBar
 
     private val messageController = MessageController()
     private val dataMessage = mutableListOf<DataMessage>()
@@ -38,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         getUserName()
         welcomeMessage()
 
+
         sendButton.setOnClickListener(View.OnClickListener {
             dataMessageListAdd(userInput.text.toString(), myUserName, myMessage = true)
             //отправка на сервер
@@ -53,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         sendButton = findViewById(R.id.sendButton)
         userInput = findViewById(R.id.userInput)
         chatWindow = findViewById(R.id.chatWindow)
+        actionBar = this.supportActionBar!!
+        actionBar.setTitle("Крипто чат")
     }
 
     private fun recyclerInit() {
@@ -76,9 +87,19 @@ class MainActivity : AppCompatActivity() {
             //для того чтобы взаимодействовать с основным потокам нужно
             //позволяет из фонового потока выполнить в основном
             runOnUiThread(Runnable {
+                //передача сообщения входящего Активити
                 dataMessageListAdd(text = it.second, userName = it.first, myMessage = false)
+                println("fun connectServer показ")
+            })
+        }, Consumer {
+            //передача сообщения в Тоаст
+            runOnUiThread({
+                toast(connect = it.first, name = it.second)
+                //количество пользователей онлайн
+                actionBar.setTitle("Крипто чат | Онлайн: ${it.third}")
             })
         })
+
     }
 
     //добавление в базу данных
@@ -153,7 +174,11 @@ class MainActivity : AppCompatActivity() {
             //действия по заверению интервала
             override fun onFinish() {
                 messageController.setMessage(false)
-                dataMessageListAdd("Если вы видите это сообщение, значит сервер не доступен !", "Тяпа", myMessage = false)
+                dataMessageListAdd(
+                    "Если вы видите это сообщение, значит сервер не доступен !",
+                    "Тяпа",
+                    myMessage = false
+                )
             }
         }
         timer.start()
@@ -175,6 +200,20 @@ class MainActivity : AppCompatActivity() {
             5. Секретное слово: ${Crypto.pass}
         """.trimIndent()
         dataMessageListAdd(message, "Бот", false)
+    }
+
+
+    /// Toast появление информации о подключившемся пользователе
+    fun toast(connect: Boolean = true, name: String = "Пустое имя") {
+        if (connect) {
+            val text = "$name подключился к чату"
+            val toast = Toast.makeText(this, text, Toast.LENGTH_SHORT)
+            toast.show()
+        } else {
+            val text = "$name отключился от чата"
+            val toast = Toast.makeText(this, text, Toast.LENGTH_SHORT)
+            toast.show()
+        }
     }
 }
 
