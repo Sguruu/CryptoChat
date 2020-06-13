@@ -13,6 +13,7 @@ class NewServer(
     //для передачи между активити
     private var onMessagwReceive: Consumer<Pair<String, String>>
 ) {
+    val URL = "ws://138.197.189.159:8881"
     //для хранения пользователя и его переменно
     val names = mutableMapOf<Long, String>()
     // private lateinit var  onMessagwReceive : Consumer <Pair<String,String>>
@@ -22,7 +23,7 @@ class NewServer(
 
     //создали запрос
     val request = Request.Builder()
-        .url("ws://138.197.189.159:8881")
+        .url(URL)
         .build()
     //отключение симулятора сообщений
     //true - включить false - отключить
